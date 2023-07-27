@@ -12,7 +12,7 @@ HOST = 'localhost'
 PORT = 50051
 
 def get_feature(stub)
-  GRPC.logger.info('===== get_feature =====')
+  GRPC_KIT.logger.info('===== get_feature =====')
   points = [
     Routeguide::Point.new(latitude: 409_146_138, longitude: -746_188_906),
     Routeguide::Point.new(latitude: 0, longitude: 0),
@@ -21,15 +21,15 @@ def get_feature(stub)
   points.each do |pt|
     feature = stub.get_feature(pt)
     if feature.name == ''
-      GRPC.logger.info("Found nothing at #{feature.inspect}")
+      GRPC_KIT.logger.info("Found nothing at #{feature.inspect}")
     else
-      GRPC.logger.info("Found '#{feature.name}' at #{feature.location.inspect}")
+      GRPC_KIT.logger.info("Found '#{feature.name}' at #{feature.location.inspect}")
     end
   end
 end
 
 def list_features(stub)
-  GRPC.logger.info('===== list_features =====')
+  GRPC_KIT.logger.info('===== list_features =====')
   rect = Routeguide::Rectangle.new(
     lo: Routeguide::Point.new(latitude: 400_000_000, longitude: -750_000_000),
     hi: Routeguide::Point.new(latitude: 420_000_000, longitude: -730_000_000),
@@ -37,12 +37,12 @@ def list_features(stub)
 
   stream = stub.list_features(rect)
   stream.each do |r|
-    GRPC.logger.info("Found #{r.name} at #{r.location.inspect}")
+    GRPC_KIT.logger.info("Found #{r.name} at #{r.location.inspect}")
   end
 end
 
 def record_route(stub, size)
-  GRPC.logger.info('===== record_route =====')
+  GRPC_KIT.logger.info('===== record_route =====')
 
   features = File.open(RESOURCE_PATH) do |f|
     JSON.parse(f.read)
@@ -53,13 +53,13 @@ def record_route(stub, size)
   size.times do
     location = features.sample['location']
     point = Routeguide::Point.new(latitude: location['latitude'], longitude: location['longitude'])
-    GRPC.logger.info("Next point is #{point.inspect}")
+    GRPC_KIT.logger.info("Next point is #{point.inspect}")
     stream.send_msg(point)
     sleep(rand(0..1))
   end
 
   resp = stream.recv
-  GRPC.logger.info("summary: #{resp.inspect}")
+  GRPC_KIT.logger.info("summary: #{resp.inspect}")
 end
 
 ROUTE_CHAT_NOTES = [
@@ -72,13 +72,13 @@ ROUTE_CHAT_NOTES = [
 ].freeze
 
 def route_chat(stub)
-  GRPC.logger.info('===== route_chat =====')
+  GRPC_KIT.logger.info('===== route_chat =====')
 
   call = stub.route_chat({})
 
   t = Thread.new do
     call.each do |rn|
-      GRPC.logger.info("Got message #{rn.message} at point (#{rn.location.latitude}, #{rn.location.longitude})")
+      GRPC_KIT.logger.info("Got message #{rn.message} at point (#{rn.location.latitude}, #{rn.location.longitude})")
     end
   end
 

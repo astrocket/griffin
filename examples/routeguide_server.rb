@@ -20,14 +20,14 @@ class Server < Routeguide::RouteGuide::Service
   end
 
   def get_feature(point, ctx)
-    GRPC.logger.info('===== get_feature =====')
+    GRPC_KIT.logger.info('===== get_feature =====')
     name = @features.fetch({ 'longitude' => point.longitude, 'latitude' => point.latitude }, '')
-    GRPC.logger.info("Point longitude=#{point.longitude}, latitude=#{point.latitude}, metadata=#{ctx.metadata}")
+    GRPC_KIT.logger.info("Point longitude=#{point.longitude}, latitude=#{point.latitude}, metadata=#{ctx.metadata}")
     Routeguide::Feature.new(location: point, name: name)
   end
 
   def list_features(rect, stream)
-    GRPC.logger.info('===== list_features =====')
+    GRPC_KIT.logger.info('===== list_features =====')
 
     @features.each do |location, name|
       if name.nil? || name == '' || !in_range(location, rect)
@@ -36,13 +36,13 @@ class Server < Routeguide::RouteGuide::Service
 
       pt = Routeguide::Point.new(location)
       resp = Routeguide::Feature.new(location: pt, name: name)
-      GRPC.logger.info(resp)
+      GRPC_KIT.logger.info(resp)
       stream.send_msg(resp)
     end
   end
 
   def record_route(stream)
-    GRPC.logger.info('===== record_route =====')
+    GRPC_KIT.logger.info('===== record_route =====')
     distance = 0
     count = 0
     features = 0
@@ -50,7 +50,7 @@ class Server < Routeguide::RouteGuide::Service
     last = nil
 
     stream.each do |point|
-      GRPC.logger.info(point)
+      GRPC_KIT.logger.info(point)
 
       count += 1
       name = @features.fetch({ 'longitude' => point.longitude, 'latitude' => point.latitude }, '')
@@ -71,9 +71,9 @@ class Server < Routeguide::RouteGuide::Service
   end
 
   def route_chat(call)
-    GRPC.logger.info('===== record_chat =====')
+    GRPC_KIT.logger.info('===== record_chat =====')
     call.each do |rn|
-      GRPC.logger.info("route_note location=#{rn.location.inspect}, message=#{rn.message}")
+      GRPC_KIT.logger.info("route_note location=#{rn.location.inspect}, message=#{rn.message}")
       key = "#{rn.location.latitude} #{rn.location.longitude}"
       saved_msgs = @route_notes[key]
       @route_notes[key] << rn.message

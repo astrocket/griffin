@@ -8,7 +8,7 @@ module Helloworld
   module Greeter
     class Service
 
-      include GRPC::GenericService
+      include GRPC_KIT::GenericService
 
       self.marshal_class_method = :encode
       self.unmarshal_class_method = :decode

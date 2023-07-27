@@ -40,7 +40,7 @@ module Griffin
     # @param max_pool_size [Integer] Worker thread maximun size
     # @param min_connection_size [Integer] Maximun connection of TCP
     # @param max_connection_size [Integer] Minimum connection of TCP
-    # @param interceptors [Array<GrpcKit::GRPC::ServerInterceptor>] list of interceptors
+    # @param interceptors [Array<GrpcKit::GRPC_KIT::ServerInterceptor>] list of interceptors
     # @param shutdown_timeout [Integer] Timeout for server shutdown in seconds
     # @param settings [Array<DS9::Settings,Integer>] list of HTTP2-Settings headers
     # @param max_receive_message_size [Integer, nil] Specify the default maximum size of inbound message in bytes. Default to 4MB.

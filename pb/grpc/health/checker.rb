@@ -21,7 +21,7 @@ module Grpc
   module Health
     # Checker is implementation of the schema-specified health checking service.
     class Checker < V1::Health::Service
-      StatusCodes = GRPC::Core::StatusCodes
+      StatusCodes = GRPC_KIT::Core::StatusCodes
       HealthCheckResponse = V1::HealthCheckResponse
 
       # Initializes the statuses of participating services
@@ -37,7 +37,7 @@ module Grpc
           status = @statuses["#{req.service}"]
         end
         if status.nil?
-          fail GRPC::NotFound.new("Service is not found: #{req.service}")
+          fail GRPC_KIT::NotFound.new("Service is not found: #{req.service}")
         end
         HealthCheckResponse.new(status: status)
       end

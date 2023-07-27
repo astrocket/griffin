@@ -3,7 +3,7 @@
 require 'grpc_kit'
 require_relative 'call_stream'
 
-class LoggingInterceptor < GRPC::ClientInterceptor
+class LoggingInterceptor < GRPC_KIT::ClientInterceptor
   def request_response(request: nil, method: nil, **)
     now = Time.now.to_i
     GrpcKit.logger.info("Started request #{request}, method=#{method.name}, service_name=#{method.receiver.class.service_name}")
